@@ -1,7 +1,7 @@
 /**
  * @author miosec
  */
-package org.miosec.utils;
+package org.miosec.mobilesafe.utils;
 
 import java.io.BufferedReader;
 import java.io.IOException;

@@ -1,7 +1,7 @@
 package org.miosec.mobilesafe.activity;
 
 import org.miosec.mobilesafe.R;
-import org.miosec.utils.LaoUtils;
+import org.miosec.mobilesafe.utils.LaoUtils;
 
 import android.os.Bundle;
 import android.widget.TextView;
