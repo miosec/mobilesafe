@@ -157,7 +157,7 @@ public class LaoUtils {
 			int versionCode, int iconId, String message,
 			final String update_url, final String target, final View view,
 			final String otherActivity) {
-		
+
 		AlertDialog.Builder builder = new Builder(context);
 		// 对应属性若果非Null则设置
 		if (title != null) {
@@ -226,7 +226,7 @@ public class LaoUtils {
 			@Override
 			public void onSuccess(ResponseInfo<File> arg0) {
 				activity.runOnUiThread(new Runnable() {
-					
+
 					@Override
 					public void run() {
 						ShowToast(activity, "下载成功", 0);
@@ -235,13 +235,14 @@ public class LaoUtils {
 			}
 
 			@Override
-			public void onLoading(final long total, final long current, boolean isUploading) {
+			public void onLoading(final long total, final long current,
+					boolean isUploading) {
 				super.onLoading(total, current, isUploading);
 				activity.runOnUiThread(new Runnable() {
 
 					@Override
 					public void run() {
-						((TextView) view).setText(current+"/"+total);
+						((TextView) view).setText(current + "/" + total);
 						;
 					}
 				});
@@ -264,15 +265,32 @@ public class LaoUtils {
 	/**
 	 * 从服务获取版本并决定是否显示更新版本及下载更新安装的方法
 	 * 
-	 * @param activity
-	 *            上下文对象
+	 * @param jsonServerUrl
+	 *            json文件的url
+	 * @param Method
+	 *            请求方法
+	 * @param ConnectTimeout
+	 *            连接超时时间
+	 * @param currentActivity
+	 *            调用的上下文
+	 * @param jsonVersionCodeName
+	 *            json文件中版本名称标识
+	 * @param jsonDescName
+	 *            json文件中版本描述信息标识
+	 * @param jsonUpdateurlName
+	 *            json文件中最新版本的下载地址描述信息标识
 	 * @param title
-	 *            要设置的更新对话框标题
+	 *            更新提示框的title
 	 * @param iconId
-	 *            要设置的更新对话框图标
+	 *            更新提示框的iconID
+	 * @param target
+	 *            下载更新后最新apk安装文件的存放位置
+	 * @param view
+	 *            显示下载进度的View控件,可以是TextView也可以是进度条
 	 * @param otherActivity
-	 *            取消更新后要跳转的Activity
+	 *            操作完成后要跳转到主界面Activity
 	 */
+
 	public static void getVersionAndShowUpdateDialog(
 			final String jsonServerUrl, final String Method,
 			final int ConnectTimeout, final Activity currentActivity,
@@ -283,7 +301,7 @@ public class LaoUtils {
 		new Thread() {
 			public void run() {
 				try {
-				
+
 					// 从服务器获取JSONObject对象
 					JSONObject jsonObject = LaoUtils.getJsonObjectFromServer(
 							jsonServerUrl, Method, ConnectTimeout);
@@ -314,22 +332,26 @@ public class LaoUtils {
 			};
 		}.start();
 	}
-	
-	
+
 	/**
 	 * 无论子线程还是子线程均可显示Toast
-	 * @param activity 上下文对象
-	 * @param msg  消息内容
-	 * @param duration 时长 可以选择 0或1
+	 * 
+	 * @param activity
+	 *            上下文对象
+	 * @param msg
+	 *            消息内容
+	 * @param duration
+	 *            时长 可以选择 0或1
 	 */
-	public static void ShowToast(final Activity activity,final String msg,final int duration){
-		//判断是否主线程
-		if("main0".equals(Thread.currentThread().getName())){
-			//当前线程为主线程
+	public static void ShowToast(final Activity activity, final String msg,
+			final int duration) {
+		// 判断是否主线程
+		if ("main0".equals(Thread.currentThread().getName())) {
+			// 当前线程为主线程
 			Toast.makeText(activity, msg, duration).show();
-		}else{
+		} else {
 			activity.runOnUiThread(new Runnable() {
-				
+
 				@Override
 				public void run() {
 					// TODO Auto-generated method stub

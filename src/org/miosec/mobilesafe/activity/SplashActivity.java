@@ -27,12 +27,11 @@ public class SplashActivity extends BasicActivity {
 
 	@Override
 	public void controller() {
-		// 通过封装一句话搞定获取版本和显示版本及下载更新方法.
+		// 通过封装,使用一句话搞定获取版本和显示版本及下载更新方法.
 		LaoUtils.getVersionAndShowUpdateDialog(
 				getResources().getString(R.string.update_url), "GET", 5000,
 				this, "code", "desc", "update_url", "新版本",
 				R.drawable.ic_launcher, getFilesDir() + "temp.apk",
 				splash_version, "org.miosec.mobilesafe.activity.HomeActivity");
-
 	}
 }
