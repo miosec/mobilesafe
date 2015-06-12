@@ -4,6 +4,7 @@
 package org.miosec.mobilesafe.utils;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -13,6 +14,11 @@ import java.net.URL;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import com.lidroid.xutils.HttpUtils;
+import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.ResponseInfo;
+import com.lidroid.xutils.http.callback.RequestCallBack;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -24,6 +30,9 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
 
 public class LaoUtils {
 	protected static final String TAG = "LaoUtils";
@@ -146,7 +155,10 @@ public class LaoUtils {
 	 */
 	public static void showUpdateDialog(final Context context, String title,
 			int versionCode, int iconId, String message,
-			final String update_url, final String otherActivity) {
+			final String update_url, final String target, final View view,
+			final String otherActivity) {
+		System.out.println(view);
+		
 		AlertDialog.Builder builder = new Builder(context);
 		// 对应属性若果非Null则设置
 		if (title != null) {
@@ -166,7 +178,12 @@ public class LaoUtils {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				dialog.dismiss();
-				downloadApk(update_url);
+				try {
+					downloadApk(update_url, target, view, (Activity) context,
+							Class.forName(otherActivity));
+				} catch (ClassNotFoundException e) {
+					e.printStackTrace();
+				}
 			}
 		});
 		builder.setNegativeButton("取消", new OnClickListener() {
@@ -188,10 +205,53 @@ public class LaoUtils {
 
 	/**
 	 * 该工具类使用xutils的下载相关方法,后期会想办法给集成进来
+	 * 
 	 * @param update_url
 	 */
-	public static void downloadApk(String update_url) {
-		
+	public static void downloadApk(String update_url, String target,
+			final View view, final Activity activity, final Class<?> class1) {
+		System.out.println(view);
+
+		HttpUtils httpUtils = new HttpUtils();
+		httpUtils.download(update_url, target, new RequestCallBack<File>() {
+
+			@Override
+			public void onFailure(HttpException arg0, String arg1) {
+				try {
+					gotoActivity(activity, class1);
+				} catch (ClassNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+
+			@Override
+			public void onSuccess(ResponseInfo<File> arg0) {
+				activity.runOnUiThread(new Runnable() {
+					
+					@Override
+					public void run() {
+						ShowToast(activity, "下载成功", 0);
+					}
+				});
+			}
+
+			@Override
+			public void onLoading(final long total, final long current, boolean isUploading) {
+				super.onLoading(total, current, isUploading);
+				activity.runOnUiThread(new Runnable() {
+
+					@Override
+					public void run() {
+						System.out.println(view);
+
+						((TextView) view).setText(current+"/"+total);
+						;
+					}
+				});
+			}
+
+		});
 	}
 
 	/**
@@ -204,7 +264,7 @@ public class LaoUtils {
 			throws ClassNotFoundException {
 		activity.startActivity(new Intent(activity, class1));
 	}
- 
+
 	/**
 	 * 从服务获取版本并决定是否显示更新版本及下载更新安装的方法
 	 * 
@@ -222,10 +282,12 @@ public class LaoUtils {
 			final int ConnectTimeout, final Activity currentActivity,
 			final String jsonVersionCodeName, final String jsonDescName,
 			final String jsonUpdateurlName, final String title,
-			final int iconId, final String otherActivity) {
+			final int iconId, final String target, final View view,
+			final String otherActivity) {
 		new Thread() {
 			public void run() {
 				try {
+				
 					// 从服务器获取JSONObject对象
 					JSONObject jsonObject = LaoUtils.getJsonObjectFromServer(
 							jsonServerUrl, Method, ConnectTimeout);
@@ -243,7 +305,7 @@ public class LaoUtils {
 							public void run() {
 								LaoUtils.showUpdateDialog(currentActivity,
 										title, serverVersionCode, iconId, desc,
-										update_url, otherActivity);
+										update_url, target, view, otherActivity);
 							}
 						});
 					} else {
@@ -255,5 +317,29 @@ public class LaoUtils {
 				}
 			};
 		}.start();
+	}
+	
+	
+	/**
+	 * 无论子线程还是子线程均可显示Toast
+	 * @param activity 上下文对象
+	 * @param msg  消息内容
+	 * @param duration 时长 可以选择 0或1
+	 */
+	public static void ShowToast(final Activity activity,final String msg,final int duration){
+		//判断是否主线程
+		if("main0".equals(Thread.currentThread().getName())){
+			//当前线程为主线程
+			Toast.makeText(activity, msg, duration).show();
+		}else{
+			activity.runOnUiThread(new Runnable() {
+				
+				@Override
+				public void run() {
+					// TODO Auto-generated method stub
+					Toast.makeText(activity, msg, duration).show();
+				}
+			});
+		}
 	}
 }

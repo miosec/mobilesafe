@@ -21,3 +21,6 @@
 				getResources().getString(R.string.update_url), "GET", 5000,
 				this, "code", "desc", "update_url", "新版本",
 				R.drawable.ic_launcher, "org.miosec.mobilesafe.HomeActivity");
+2015-06-13 2:17
+		
+	接着我们来实现HomeActivity的界面
