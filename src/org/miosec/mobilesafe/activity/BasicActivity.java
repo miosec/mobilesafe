@@ -1,4 +1,4 @@
-package org.miosec.activity;
+package org.miosec.mobilesafe.activity;
 
 import android.app.Activity;
 import android.os.Bundle;

@@ -1,6 +1,6 @@
-package org.miosec.mobilesafe;
+package org.miosec.mobilesafe.activity;
 
-import org.miosec.activity.BasicActivity;
+import org.miosec.mobilesafe.R;
 import org.miosec.utils.LaoUtils;
 
 import android.os.Bundle;
