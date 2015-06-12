@@ -157,7 +157,6 @@ public class LaoUtils {
 			int versionCode, int iconId, String message,
 			final String update_url, final String target, final View view,
 			final String otherActivity) {
-		System.out.println(view);
 		
 		AlertDialog.Builder builder = new Builder(context);
 		// 对应属性若果非Null则设置
@@ -210,7 +209,6 @@ public class LaoUtils {
 	 */
 	public static void downloadApk(String update_url, String target,
 			final View view, final Activity activity, final Class<?> class1) {
-		System.out.println(view);
 
 		HttpUtils httpUtils = new HttpUtils();
 		httpUtils.download(update_url, target, new RequestCallBack<File>() {
@@ -243,8 +241,6 @@ public class LaoUtils {
 
 					@Override
 					public void run() {
-						System.out.println(view);
-
 						((TextView) view).setText(current+"/"+total);
 						;
 					}

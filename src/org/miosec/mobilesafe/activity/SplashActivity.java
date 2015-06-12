@@ -3,9 +3,7 @@ package org.miosec.mobilesafe.activity;
 import org.miosec.mobilesafe.R;
 import org.miosec.mobilesafe.utils.LaoUtils;
 
-import android.app.Activity;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.TextView;
 
 public class SplashActivity extends BasicActivity {
