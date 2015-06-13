@@ -1,4 +1,4 @@
-package org.miosec.mobilesafe.activity;
+ package org.miosec.mobilesafe.activity;
 
 import org.miosec.mobilesafe.R;
 import org.miosec.mobilesafe.utils.LaoUtils;
@@ -31,7 +31,7 @@ public class SplashActivity extends BasicActivity {
 		LaoUtils.getVersionAndShowUpdateDialog(
 				getResources().getString(R.string.update_url), "GET", 5000,
 				this, "code", "desc", "update_url", "�°汾",
-				R.drawable.ic_launcher, getFilesDir() + "temp.apk",
+				R.drawable.ic_launcher, LaoUtils.getSdCardPath()+"/temp.apk",
 				splash_version, "org.miosec.mobilesafe.activity.HomeActivity");
 	}
 }

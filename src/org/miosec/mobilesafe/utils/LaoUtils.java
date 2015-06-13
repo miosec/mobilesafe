@@ -29,6 +29,8 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.net.Uri;
+import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -207,9 +209,10 @@ public class LaoUtils {
 	 * 
 	 * @param update_url
 	 */
-	public static void downloadApk(String update_url, String target,
+	public static void downloadApk(String update_url, final String target,
 			final View view, final Activity activity, final Class<?> class1) {
-
+		System.out.println("downloadApk");
+		System.out.println("downloadApk--------"+update_url);
 		HttpUtils httpUtils = new HttpUtils();
 		httpUtils.download(update_url, target, new RequestCallBack<File>() {
 
@@ -218,7 +221,6 @@ public class LaoUtils {
 				try {
 					gotoActivity(activity, class1);
 				} catch (ClassNotFoundException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -230,6 +232,7 @@ public class LaoUtils {
 					@Override
 					public void run() {
 						ShowToast(activity, "下载成功", 0);
+						installApk(activity, target);
 					}
 				});
 			}
@@ -354,10 +357,26 @@ public class LaoUtils {
 
 				@Override
 				public void run() {
-					// TODO Auto-generated method stub
 					Toast.makeText(activity, msg, duration).show();
 				}
 			});
+		}
+	}
+	public static void installApk(Activity activity,String target){
+		// 通过向系统传递安装应用程序包的意图操作进行对下载的更新包的安装 ★ ★ ★ ★ ★
+		System.out.println(target);
+		Intent intent = new Intent("android.intent.action.VIEW");
+		intent.addCategory("android.intent.category.DEFAULT");
+		intent.setDataAndType(Uri.fromFile(new File(target)),
+				"application/vnd.android.package-archive");
+		activity.startActivityForResult(intent, 99);
+		activity.finish();
+	}
+	public static String getSdCardPath(){
+		if(Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
+			return Environment.getExternalStorageDirectory().getAbsolutePath();
+		}else{
+			return "";
 		}
 	}
 }
